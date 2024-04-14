@@ -27,6 +27,13 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+  
+    "extra": {
+      "poppins": "./assets/Poppins.ttf"
     }
-  }
-}
+ }
+ 
+
+ }
+

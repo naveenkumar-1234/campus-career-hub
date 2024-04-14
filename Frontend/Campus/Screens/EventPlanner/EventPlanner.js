@@ -52,7 +52,7 @@ export default function EventPlanner() {
               marginTop: 17,
             }}
           >
-            {"INTERNSHIP"}
+            {"EVENT PLANNER"}
           </Text>
           <View
             style={{

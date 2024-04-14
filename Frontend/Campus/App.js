@@ -12,9 +12,15 @@ import Notice from './Screens/NoticePage/Notice';
 import InternShip from './Screens/Internship/InternShip';
 import EventPlanner from './Screens/EventPlanner/EventPlanner';
 import AddNotice from './Screens/NoticePage/AddNotice';
-// import AddIntern from './Screens/Internship/addIntern';
+import AddIntern from './Screens/Internship/AddIntern';
 import SkillAppraisal from './Screens/Skill Appraisal/SkillAppraisal';
 import Appointees from './Screens/Appointees/Appointees';
+
+import Arithmetic from './Screens/QuestionPage/Arithmetic';
+import Interpretation from './Screens/QuestionPage/Interpretation';
+import Verbal from './Screens/QuestionPage/Verbal';
+import Logical from './Screens/QuestionPage/Logical';
+import StudentScore from './Screens/QuestionPage/StudentScore';
 
 const Stack =createNativeStackNavigator()
 export default function App() {
@@ -31,9 +37,14 @@ export default function App() {
         <Stack.Screen name='Internship' component={InternShip} options={{headerShown:false}} />
         <Stack.Screen name='Eventplanner' component={EventPlanner} options={{headerShown:false}} />
         <Stack.Screen name='addNotice' component={AddNotice} options={{headerShown:false}} />
-        {/* <Stack.Screen name='addInternship' component={AddIntern} options={{headerShown:false}} /> */}
+        <Stack.Screen name='addInternship' component={AddIntern} options={{headerShown:false}} />
         <Stack.Screen name='skill' component={SkillAppraisal} options={{headerShown:false}} />
         <Stack.Screen name='appointees' component={Appointees} options={{headerShown:false}} />
+        <Stack.Screen name='arithmetic' component={Arithmetic} options={{headerShown:false}} />
+        <Stack.Screen name='interpretation' component={Interpretation} options={{headerShown:false}} />
+        <Stack.Screen name='verbal' component={Verbal} options={{headerShown:false}} />
+        <Stack.Screen name='logical' component={Logical} options={{headerShown:false}} />
+        <Stack.Screen name='studentscore' component={StudentScore} options={{headerShown:false}} />
 
       </Stack.Navigator>
     </NavigationContainer>

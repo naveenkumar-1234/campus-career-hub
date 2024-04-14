@@ -5,7 +5,7 @@ import Avatar from '../../assets/AvatarImage.png';
 import Notice from '../../assets/NoticeIcon.png';
 import Appointees from '../../assets/Appointees.png';
 import Event from '../../assets/Event.png';
-import Search from '../../assets/SearchIcon.png';
+// import Search from '../../assets/SearchIcon.png';
 import UploadCV from '../../assets/UploadCV.png';
 import Notification from '../../assets/NotificationIcon.png';
  import Internship from '../../assets/1.png';
@@ -16,15 +16,18 @@ export default function HomeScreen(){
 	
     const navigator=useNavigation()
     const router=useRoute();
+	console.log(router.params?.data);
     const userData=router.params?.data
+	
+	console.log("sds",userData.data);
 
 	const typeOfUser=router.params?.userType
     const handleUpload=(data)=>{
 		
-		const user_id=data.data.student_id
-		console.log(data.data.student_id);
-		console.log(user_id,"fgf")
-		console.log(router.params);
+		const user_id=data
+		console.log("inside",user_id);
+		// console.log(user_id,"fgf")
+		// console.log(router.params);
         navigator.navigate("UploadCv",{id:user_id})
     }
 	const handleDownload=()=>{
@@ -37,7 +40,7 @@ export default function HomeScreen(){
 
 		}else{
 			console.log("add");
-			// navigator.navigate('addInternship')
+		 navigator.navigate('addInternship')
 		}
 	}
 	const handleNotice=()=>{
@@ -61,8 +64,17 @@ export default function HomeScreen(){
 	const handleNotification=()=>{
 		Alert.alert("Notification","Empty")
 	}
-	const handleSkill=()=>{
-		navigator.navigate('skill')
+	const playAptitude=(data)=>{
+		
+		const user_id=data
+		console.log("inside",user_id);
+		// console.log(user_id,"fgf")
+		// console.log(router.params);
+        navigator.navigate("skill",{id:user_id})
+    }
+	const seeStdScore=()=>{
+         navigator.navigate("studentscore")
+		
 	}
 	const handleAppointees=()=>{
 		navigator.navigate('appointees')
@@ -80,7 +92,7 @@ export default function HomeScreen(){
 					backgroundColor: "#6287A1D9",
 					borderRadius: 25,
 					paddingTop: 21,
-					paddingBottom: 425,
+					
 				}}>
 				<View 
 					style = {{
@@ -94,13 +106,13 @@ export default function HomeScreen(){
 						resizeMode = {"stretch"}
 						style = {{
 							width: 31,
-							height: 33,
+							height: 33,borderRadius:20
 						}}
 					/>
 					<View 
 						style = {{
 							flex: 1,
-							alignSelf: "stretch",
+							
 						}}>
 					</View>
 					<TouchableOpacity onPress={handleAvatar}  >
@@ -110,7 +122,7 @@ export default function HomeScreen(){
 						style = {{
 							width: 31,
 							height: 33,
-							marginRight: 28,
+							marginRight: 28,borderRadius:20
 						}}
 					/>
 					</TouchableOpacity>
@@ -121,33 +133,32 @@ export default function HomeScreen(){
 						style = {{
 							width: 29,
 							height: 33,
-							marginRight: 19,
+							marginRight: 19,borderRadius:20
 						}}
 					/>
 					</TouchableOpacity>
-					<Image
-						source = {Search} 
-						resizeMode = {"stretch"}
-						style = {{
-							width: 32,
-							height: 33,
-						}}
-					/>
+					<TouchableOpacity  style={{borderWidth:1,paddingVertical:2,paddingHorizontal:10,borderRadius:20,backgroundColor:'#6287A1D9',borderColor:'black'}} onPress={()=>{
+						navigator.navigate('Home');
+					}}>
+						<Text style={{fontSize:16,color:'white',fontWeight:'bold'}} >Log out</Text>
+					</TouchableOpacity>
 				</View>
 				<View 
 					style = {{
-						width: 377,
+						width: "100%",
 						height: 2,
 						backgroundColor: "#000000",
 						marginBottom: 25,
 					}}>
 				</View>
+				{/* Appbar */}
 				<View 
 					style = {{
 						flexDirection: "row",
 						alignItems: "center",
+						justifyContent:'space-around',
 						marginBottom: 6,
-						marginHorizontal: 20,
+						
 					}}>
 					<TouchableOpacity  onPress={handleNotice} >
 					<Image
@@ -156,13 +167,14 @@ export default function HomeScreen(){
 						style = {{
 							width: 77,
 							height: 75,
+							borderRadius:20
 						}}
 					/>
 					</TouchableOpacity>
 					<View 
 						style = {{
-							flex: 1,
-							alignSelf: "stretch",
+							
+							
 						}}>
 					</View>
 					<TouchableOpacity onPress={handleEventPlan}  >
@@ -172,7 +184,10 @@ export default function HomeScreen(){
 						style = {{
 							width: 77,
 							height: 75,
-							marginRight: 51,
+							borderRadius:20,
+							marginRight:20
+							
+							
 						}}
 					/>
 					</TouchableOpacity>
@@ -182,7 +197,7 @@ export default function HomeScreen(){
 						resizeMode = {"stretch"}
 						style = {{
 							width: 77,
-							height: 75,
+							height: 75,borderRadius:20
 						}}
 					/>
 					</TouchableOpacity>
@@ -191,6 +206,8 @@ export default function HomeScreen(){
 					style = {{
 						flexDirection: "row",
 						alignItems: "center",
+						
+						justifyContent:"space-between",
 						marginBottom: 33,
 						marginHorizontal: 30,
 					}}>
@@ -198,8 +215,7 @@ export default function HomeScreen(){
 						style = {{
 							color: "#000000",
 							fontSize: 16,
-							marginRight: 4,
-							flex: 1,
+							
 						}}>
 						{"Notice"}
 					</Text>
@@ -207,8 +223,9 @@ export default function HomeScreen(){
 						style = {{
 							color: "#000000",
 							fontSize: 16,
-							marginRight: 45,
-							width: 60,
+						     marginLeft:30,
+							 paddingHorizontal:10,
+							
 						}}>
 						{"Event planner"}
 					</Text>
@@ -225,25 +242,31 @@ export default function HomeScreen(){
 						flexDirection: "row",
 						alignItems: "center",
 						marginBottom: 6,
-						marginHorizontal: 22,
+						justifyContent:"space-around"
 					}}>
-					<TouchableOpacity onPress={handleSkill}  >
-					<Image
+					<TouchableOpacity onPress={()=>{
+						{console.log(userData);}
+						`${typeOfUser==="student"?playAptitude(userData):seeStdScore()}`
+						
+						
+						}} >
+                    <Image
 						source = {Skill}
 						resizeMode = {"stretch"}
 						style = {{
 							width: 77,
-							height: 76,
+							height: 76,borderRadius:20
 						}}
 					/>
-					</TouchableOpacity>
+                    </TouchableOpacity>
 					<View 
 						style = {{
-							flex: 1,
-							alignSelf: "stretch",
+						
+							
 						}}>
 					</View>
 					<TouchableOpacity onPress={()=>{
+						{console.log(userData);}
 						`${typeOfUser==="student"?handleUpload(userData):handleDownload()}`
 						
 						
@@ -254,7 +277,7 @@ export default function HomeScreen(){
 						style = {{
 							width: 77,
 							height: 76,
-							marginRight: 56,
+							borderRadius:20,marginRight:20
 						}}
 					/>
                     </TouchableOpacity>
@@ -264,7 +287,7 @@ export default function HomeScreen(){
 						resizeMode = {"stretch"}
 						style = {{
 							width: 77,
-							height: 75,
+							height: 75,borderRadius:20
 						}}
 					/>
 					</TouchableOpacity>
@@ -273,14 +296,16 @@ export default function HomeScreen(){
 					style = {{
 						flexDirection: "row",
 						alignItems: "center",
-						marginHorizontal: 21,
+						width:"100%",
+						justifyContent:"space-around",
+						
 					}}>
 					<Text 
 						style = {{
 							color: "#000000",
 							fontSize: 16,
 							marginRight: 4,
-							flex: 1,
+							
 						}}>
 						{"Skill Appraisal"}
 					</Text>
@@ -288,7 +313,7 @@ export default function HomeScreen(){
 						style = {{
 							color: "#000000",
 							fontSize: 16,
-							marginRight: 38,
+							
 						}}>
 						{typeOfUser==="student"?`Upload CV`:`Download CV`}
 					</Text>
@@ -300,8 +325,10 @@ export default function HomeScreen(){
 						{"Appointees"}
 					</Text>
 				</View>
+				
 			</ScrollView>
 		</SafeAreaView>
+		
 		
     )
 }

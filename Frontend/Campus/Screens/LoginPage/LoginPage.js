@@ -56,7 +56,7 @@ export default function Login() {
 
       if (response.ok) {
         const dataFromDB = await response.json();
-        console.log(dataFromDB);
+        console.log("DataFromDB",dataFromDB);
         navigater.navigate("frontscreen", {
           data: dataFromDB,
           userType: typeOfUser,
@@ -73,7 +73,7 @@ export default function Login() {
   const route = useRoute();
   const typeOfUser = route.params?.userType;
   const handleSwitch = () => {
-    console.log(ip);
+    
     navigater.navigate("Signup", { userType: typeOfUser });
   };
 

@@ -97,10 +97,16 @@ const SignUp = () => {
 
       const dataFromDB = await response.json();
       console.log(dataFromDB);
-      navigator.navigate("frontscreen", {
-        data: dataFromDB,
-        userType: typeOfUser,
-      });
+      if(response.ok){
+        
+        navigator.navigate("frontscreen", {
+          data: dataFromDB,
+          userType: typeOfUser,
+        });
+      }else{
+        console.log(dataFromDB.status);
+        Alert.alert(dataFromDB.status)
+      }
     } catch (err) {
       console.log(err);
     }

@@ -1,8 +1,50 @@
-import { useRoute, useScrollToTop } from "@react-navigation/native";
-import { SafeAreaView, View, ScrollView, Image, Text, TouchableOpacity, ActivityIndicator, Alert } from "react-native";
+import {
+  useNavigation,
+  useRoute,
+  useScrollToTop,
+} from "@react-navigation/native";
+import {
+  SafeAreaView,
+  View,
+  ScrollView,
+  Image,
+  Text,
+  TouchableOpacity,
+  ActivityIndicator,
+  Alert,
+} from "react-native";
 import Search from "../../assets/SearchIcon.png";
 import MenuBar from "../../assets/MenuBar.png";
 export default function SkillAppraisal() {
+  const navigator = useNavigation();
+  const router=useRoute()
+  
+  
+  const handleClick = (topic) => {
+    console.log(topic);
+    const router_data=router.params?.id
+    const user_id=router_data.data.student_id
+    console.log(router_data)
+     switch(topic){
+      case "arithmetic":
+    navigator.navigate("arithmetic", { id:router_data });
+
+        break
+        case "interpretation":
+    navigator.navigate("interpretation", { id:router_data });
+          
+        break
+        case "verbal":
+    navigator.navigate("verbal", { id:router_data });
+
+        break
+        case "logical":
+    navigator.navigate("logical", { id:router_data });
+
+        break
+     }
+  };
+
   return (
     <SafeAreaView
       style={{
@@ -50,14 +92,7 @@ export default function SkillAppraisal() {
               flex: 1,
             }}
           ></View>
-          <Image
-            source={Search}
-            resizeMode={"stretch"}
-            style={{
-              width: 32,
-              height: 33,
-            }}
-          />
+         
         </View>
         <View
           style={{
@@ -67,20 +102,69 @@ export default function SkillAppraisal() {
             marginBottom: 20,
           }}
         ></View>
-        <View style={{flexDirection:"column",gap:30,paddingHorizontal:50}}>
-            <View style={{flexDirection:"row",alignItems:"center" ,gap:10}}>
-                <View style={{height:10,width:10,backgroundColor:"black"}} ></View><Text style={{fontSize:20}}>Arithmetic aptitude</Text>
-            </View><View style={{flexDirection:"row",alignItems:"center" ,gap:10}}>
-            <View style={{height:10,width:10,backgroundColor:"black"}} ></View><Text style={{fontSize:20}}>Data Interpretation</Text>
-            </View><View style={{flexDirection:"row",alignItems:"center" ,gap:10}}>
-            <View style={{height:10,width:10,backgroundColor:"black"}} ></View><Text style={{fontSize:20}}>Verbal Ability</Text>
-            </View><View style={{flexDirection:"row",alignItems:"center" ,gap:10}}>
-            <View style={{height:10,width:10,backgroundColor:"black"}} ></View><Text style={{fontSize:20}}>Logical Reasoning</Text>
+        <View
+          style={{ flexDirection: "column", gap: 30, paddingHorizontal: 50 }}
+        >
+          <TouchableOpacity
+            
+            onPress={() => {
+              handleClick("arithmetic");
+            }}
+          >
+            <View 
+              style={{ flexDirection: "row", alignItems: "center", gap: 10 }}
+            >
+              <View
+                style={{ height: 10, width: 10, backgroundColor: "black" }}
+              ></View>
+              <Text style={{ fontSize: 20 }}>Arithmetic aptitude</Text>
             </View>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={() => {
+              handleClick("interpretation");
+            }}
+          >
+            <View
+              style={{ flexDirection: "row", alignItems: "center", gap: 10 }}
+            >
+              <View
+                style={{ height: 10, width: 10, backgroundColor: "black" }}
+              ></View>
+              <Text style={{ fontSize: 20 }}>Data Interpretation</Text>
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              handleClick("verbal");
+            }}
+          >
+            <View
+              style={{ flexDirection: "row", alignItems: "center", gap: 10 }}
+            >
+              <View
+                style={{ height: 10, width: 10, backgroundColor: "black" }}
+              ></View>
+              <Text style={{ fontSize: 20 }}>Verbal Ability</Text>
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              handleClick("logical");
+            }}
+          >
+            <View
+              style={{ flexDirection: "row", alignItems: "center", gap: 10 }}
+            >
+              <View
+                style={{ height: 10, width: 10, backgroundColor: "black" }}
+              ></View>
+              <Text style={{ fontSize: 20 }}>Logical Reasoning</Text>
+            </View>
+          </TouchableOpacity>
         </View>
-        
-        
       </ScrollView>
     </SafeAreaView>
-  )
+  );
 }

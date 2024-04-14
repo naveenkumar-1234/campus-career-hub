@@ -1,9 +1,10 @@
-import { useRoute, useScrollToTop } from "@react-navigation/native";
+import { useRoute } from "@react-navigation/native";
 import { SafeAreaView, View, ScrollView, Image, Text, TouchableOpacity, ActivityIndicator, Alert } from "react-native";
 import Search from "../../assets/SearchIcon.png";
 import MenuBar from "../../assets/MenuBar.png";
 import * as DocumentPicker from 'expo-document-picker'
 import { useState } from "react";
+import ipaddress from "../../ipadd";
 export default function UploadCv() {
   const router = useRoute();
   const[loading,setLoading]=useState(false)
@@ -14,9 +15,12 @@ export default function UploadCv() {
           const doc=DocumentPicker.getDocumentAsync({
             type:['application/pdf'],
           })
-          const user_id=router.params?.id
+          const router_data=router.params?.id
+          const user_id=router_data.data.student_id
+          console.log("1",user_id);
+          // console.log("1",user_id);
           const fileAssest=(await doc).assets[0]
-         console.log(fileAssest)
+         console.log("2",fileAssest)
           const formData=new FormData();
             formData.append('file',{
              uri:fileAssest.uri,
@@ -24,10 +28,10 @@ export default function UploadCv() {
              type:fileAssest.mimeType,
              size:fileAssest.size
           })
-        console.log(user_id);
+        console.log("3",user_id);
         formData.append('student_id',user_id)
-        console.log(formData);
-          const response=await fetch('http://192.168.175.41:8080/upload',{
+        console.log("Sended Form data:",formData);
+          const response=await fetch(`http://${ipaddress}/upload`,{
             method:'POST',body:formData,headers: {
                 'Content-Type': 'multipart/form-data', 
               },
@@ -38,7 +42,7 @@ export default function UploadCv() {
             Alert.alert("Unable to upload file")
           }
      }catch(err){
-        console.log(err)
+        console.log("Err",err)
     }finally{
       setLoading(false)
     }

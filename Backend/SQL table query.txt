@@ -1,0 +1,61 @@
+ CREATE TABLE `admin` (
+  `admin_id` int NOT NULL AUTO_INCREMENT,
+  `admin_name` varchar(30) NOT NULL,
+  `admin_email` varchar(30) NOT NULL,
+  `admin_password` varchar(80) NOT NULL,
+  PRIMARY KEY (`admin_id`)
+)
+
+
+ CREATE TABLE `faculty` (
+  `faculty_id` int NOT NULL AUTO_INCREMENT,
+  `faculty_name` varchar(30) NOT NULL,
+  `faculty_email` varchar(30) NOT NULL,
+  `faculty_password` varchar(80) NOT NULL,
+  PRIMARY KEY (`faculty_id`)
+)
+
+CREATE TABLE `internship` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `company_name` varchar(255) NOT NULL,
+  `open_position` varchar(255) NOT NULL,
+  `enroll_now_link` varchar(255) NOT NULL,
+  `contact_number` varchar(20) NOT NULL,
+  `contact_email` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`)
+)
+CREATE TABLE `notice` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `company_name` varchar(255) NOT NULL,
+  `designation` varchar(255) NOT NULL,
+  `required_skills` varchar(255) NOT NULL,
+  `vacancies` int NOT NULL,
+  `target_degree_branches` varchar(255) NOT NULL,
+  `job_location` varchar(255) NOT NULL,
+  `interview_date` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+)
+
+CREATE TABLE `recruiter` (
+  `recruiter_id` int NOT NULL AUTO_INCREMENT,
+  `recruiter_name` varchar(30) NOT NULL,
+  `recruiter_email` varchar(30) NOT NULL,
+  `recruiter_password` varchar(80) NOT NULL,
+  PRIMARY KEY (`recruiter_id`)
+)
+
+CREATE TABLE `student_file` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `user_id` int DEFAULT NULL,
+  `file_name` varchar(255) DEFAULT NULL,
+  `file_path` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `user_id` (`user_id`)
+)
+CREATE TABLE `students` (
+  `student_id` int NOT NULL AUTO_INCREMENT,
+  `student_name` varchar(30) NOT NULL,
+  `student_email` varchar(30) NOT NULL,
+  `student_password` varchar(80) NOT NULL,
+  PRIMARY KEY (`student_id`)
+)

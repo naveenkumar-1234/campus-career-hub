@@ -3,8 +3,8 @@ import mysql from "mysql2";
 import cors from "cors";
 import bcrypt from "bcrypt";
 import multer from "multer";
-import path from "path";
-import dirname from "./path.cjs";
+import path from 'path'
+import dirname from './path.cjs'
 
 const app = express();
 app.use(express.json());
@@ -32,171 +32,94 @@ const storage = multer.diskStorage({
   },
   filename: (req, file, cb) => {
     const ext = path.extname(file.originalname);
-    const randomNumber = Math.round(Math.random() * 1e9);
+    const randomNumber=Math.round(Math.random()*1E9);
 
-    const fileName = file.fieldname + "-" + randomNumber + ext;
-    cb(null, fileName);
+    const fileName=file.fieldname+"-" +randomNumber+ ext;
+    cb(null,fileName);
   },
 });
 
 const upload = multer({ storage: storage });
 app.post("/upload", upload.single("file"), (req, resp) => {
-  const student_id = req.body.student_id;
-  const fileName = req.file.filename;
-  console.log(fileName);
-  const filePath = path.join(dirname, "Resume", req.file.filename);
-  const statement =
-    "insert into student_file(user_id,file_name,file_path)values(?,?,?);";
-  dataBase.query(statement, [student_id, fileName, filePath], (err, res) => {
+  const student_id=req.body.student_id
+  const fileName=req.file.filename
+  console.log(fileName); 
+  const filePath=path.join(dirname,'Resume',req.file.filename)
+  const statement="insert into student_file(user_id,file_name,file_path)values(?,?,?);"
+  dataBase.query(statement,[student_id,fileName,filePath],(err,res)=>{
+    if(err){
+      console.log(err)
+      return resp.status(500).send("Unable to upload file")
+    }else{
+     return resp.status(200).send("Uploaded")
+    }
+  })
+});
+
+app.get('/allresume',(req,resp)=>{
+  dataBase.query('select * from student_file;',(err,res)=>{
+    if(err) return resp.send("Cannot fetch student_file")
+    return resp.json(res)
+  })
+})
+app.get('/dwn',(req,res)=>{
+  res.sendFile('D://Campus Career Hub//Backend//Resume//test.pdf')
+})
+app.post('/downloadresume',(req,resp)=>{
+  const {student_id}=req.body
+  console.log(student_id)
+  const sql="select file_path from student_file where user_id=?"
+  dataBase.query(sql,[student_id],(err,res)=>{
+    if(err){
+      return console.log(err)
+    }else if(res.length<=0){
+      console.log(res);
+     return resp.status(404).send("no data")
+
+    }else{
+      console.log(res)
+      const filePath=res[0].file_path
+      console.log(filePath);
+      // return resp.send(filePath)
+      return resp.sendFile(filePath,err=>{
+        console.log("Error in sending file");
+      })
+    }
+  })
+})
+
+app.post('/addnotice', (req, resp) => {
+  const { company_name, designation,required_skills, vacancies, target_degree_branches, job_location, interview_date } = req.body;
+  console.log(company_name);
+  const statement = "INSERT INTO notice (company_name, designation,required_skills, vacancies, target_degree_branches, job_location, interview_date) VALUES (?, ?, ?,?, ?, ?, ?)";
+  
+  dataBase.query(statement, [company_name, designation,required_skills, vacancies, target_degree_branches, job_location, interview_date], (err, res) => {
     if (err) {
       console.log(err);
-      return resp.status(500).send("Unable to upload file");
+      resp.status(500).json({ error: 'Failed to add notice' });
     } else {
-      return resp.status(200).send("Uploaded");
+      resp.status(200).json({ message: 'Notice added successfully' });
     }
   });
-});
-
-app.get("/allresume", (req, resp) => {
-  dataBase.query("select * from student_file;", (err, res) => {
-    if (err) return resp.send("Cannot fetch student_file");
-    return resp.json(res);
-  });
-});
-app.get("/dwn", (req, res) => {
-  res.sendFile("D:\\Campus Career Hub\\Backend\\Resume\\file-782131130.pdf");
-});
-app.get("/downloadresume/:id", (req, resp) => {
-  const { id } = req.params;
-  console.log(id);
-  const sql = "select file_path from student_file where user_id=?";
-  dataBase.query(sql, [id], (err, res) => {
+}); 
+app.post('/addintern', (req, resp) => {
+  const { company_name, open_position,contact_email,contact_number,enroll_now_link } = req.body;
+  console.log(company_name); 
+  const statement = "INSERT INTO internship(company_name, open_position,contact_email, contact_number, enroll_now_link) VALUES(?, ?, ?,?, ?)";
+  dataBase.query(statement, [company_name, open_position,contact_email, contact_number, enroll_now_link], (err, res) => {
     if (err) {
-      return console.log(err);
-    } else if (res.length <= 0) {
-      console.log(res);
-      return resp.status(404).send("no data");
+      console.log(err);
+      resp.status(500).json({ error: 'Failed to add notice' });
     } else {
-      console.log(res);
-      const filePath = res[0].file_path;
-      console.log(filePath);
-
-      return resp.sendFile(filePath);
-      return resp.sendFile(filePath, (err) => {
-        console.log("Error in sending file");
-      });
+      resp.status(200).json({ message: 'Notice added successfully' });
     }
   });
-});
-
-// Add score api end point 
-// app.post("/addscore", (req, resp) => {
-//   const { std_id, std_score } = req.body;
-//   const statement = "select * from stdscore where std_id=?;";
-//   dataBase.query(statement, [std_id], (err, res) => {
-//     if (err) return resp.status(500).json({ status: "server error" });
-//     else if (res.length > 0) {
-//       dataBase.query(
-//         "update std_score from stdscore where std_id=?",
-//         [std_id],
-//         (err, res) => {
-//           if (err) return resp.status(500).json({ status: "server error" });
-//           else {
-//             return resp.status(200).json({ status: "success" });
-//           }
-//         }
-//       );
-//     } else if (res.length <= 0) {
-//       dataBase.query(
-//         "insert into stdscore(std_id,std_score) values (?,?)",
-//         [std_id, std_score],
-//         (err, res) => {
-//           if (err) return resp.status(500).json({ status: "server error" });
-//           else {
-//             return resp.status(200).json({ status: "success" });
-//           }
-//         }
-//       );
-//     }
-//   });
-//   const stmt = "insert into stdscore (std_id,std_score) values (?,?);";
-//   dataBase.query(stmt, [std_id, std_score], (err, res) => {
-//     if (err) return resp.status(500).json({ status: "server error" });
-//     else {
-//       resp.status(200).json({ status: "score added" });
-//     }
-//   });
-// });
-app.post("/addnotice", (req, resp) => {
-  const {
-    company_name,
-    designation,
-    required_skills,
-    vacancies,
-    target_degree_branches,
-    job_location,
-    interview_date,
-  } = req.body;
-  console.log(company_name);
-  const statement =
-    "INSERT INTO notice (company_name, designation,required_skills, vacancies, target_degree_branches, job_location, interview_date) VALUES (?, ?, ?,?, ?, ?, ?)";
-
-  dataBase.query(
-    statement,
-    [
-      company_name,
-      designation,
-      required_skills,
-      vacancies,
-      target_degree_branches,
-      job_location,
-      interview_date,
-    ],
-    (err, res) => {
-      if (err) {
-        console.log(err);
-        resp.status(500).json({ error: "Failed to add notice" });
-      } else {
-        resp.status(200).json({ message: "Notice added successfully" });
-      }
-    }
-  );
-});
-app.post("/addintern", (req, resp) => {
-  const {
-    company_name,
-    open_position,
-    contact_email,
-    contact_number,
-    enroll_now_link,
-  } = req.body;
-  console.log(company_name);
-  const statement =
-    "INSERT INTO internship(company_name, open_position,contact_email, contact_number, enroll_now_link) VALUES(?, ?, ?,?, ?)";
-  dataBase.query(
-    statement,
-    [
-      company_name,
-      open_position,
-      contact_email,
-      contact_number,
-      enroll_now_link,
-    ],
-    (err, res) => {
-      if (err) {
-        console.log(err);
-        resp.status(500).json({ error: "Failed to add notice" });
-      } else {
-        resp.status(200).json({ message: "Notice added successfully" });
-      }
-    }
-  );
 });
 
 app.get("/students", (req, resp) => {
   dataBase.query("select * from students;", (err, res) => {
     if (err) {
-      return resp.send("Cannot fetch users");
+      return resp.json({status:"Cannot fetch users"});
     } else {
       return resp.json(res);
     }
@@ -205,22 +128,23 @@ app.get("/students", (req, resp) => {
 
 app.post("/std_login", (req, resp) => {
   const { email, password } = req.body;
-  const statement = "SELECT * FROM students WHERE student_email=?";
+  const statement =
+    "SELECT * FROM students WHERE student_email=?";
   dataBase.query(statement, [email], async (err, res) => {
     try {
       if (err) {
         console.log(err);
-        return resp.status(500).send("Server error");
+        return resp.status(500).json({status:"Server error"});
       } else if (res.length > 0) {
         if (res[0].student_password == password) {
-          console.log(res[0]);
-          const data = {
-            student_id: res[0].student_id,
-            student_name: res[0].student_name,
-            student_email: res[0].student_email,
-            student_password: res[0].student_password,
-          };
-          return resp.status(200).json({ data });
+          // console.log(res[0])
+          const data={
+            student_id:res[0].student_id,
+            student_name:res[0].student_name,
+            student_email:res[0].student_email,
+            student_password:res[0].student_password,
+          }
+          return resp.status(200).json({data});
         } else {
           return resp.status(400).json({ status: "password mismatch" });
         }
@@ -237,15 +161,21 @@ app.post("/std_login", (req, resp) => {
 app.post("/faculty_login", (req, resp) => {
   const { email, password } = req.body;
   const statement =
-    "SELECT faculty_password FROM faculty WHERE faculty_email=?";
+    "SELECT * FROM faculty WHERE faculty_email=?";
   dataBase.query(statement, [email], async (err, res) => {
     try {
       if (err) {
         console.log(err);
-        return resp.status(500).send("Server error");
+        return resp.status(500).json({status:"Server error"});
       } else if (res.length > 0) {
         if (res[0].faculty_password === password) {
-          return resp.status(200).json({ status: "user verified" });
+          const data={
+            faculty_id:res[0].faculty_id,
+            faculty_name:res[0].faculty_name,
+            faculty_email:res[0].faculty_email,
+            faculty_password:res[0].faculty_password,
+          }
+          return resp.status(200).json(data);
         } else {
           return resp.status(400).json({ status: "password mismatch" });
         }
@@ -261,15 +191,22 @@ app.post("/faculty_login", (req, resp) => {
 
 app.post("/admin_login", (req, resp) => {
   const { email, password } = req.body;
-  const statement = "SELECT admin_password FROM admin WHERE admin_email=?";
+  const statement =
+    "SELECT * FROM admin WHERE admin_email=?";
   dataBase.query(statement, [email], async (err, res) => {
     try {
       if (err) {
         console.log(err);
-        return resp.status(500).send("Server error");
+        return resp.status(500).json({status:"Server error"});
       } else if (res.length > 0) {
         if (res[0].admin_password === password) {
-          return resp.status(200).json({ status: "admin verified" });
+          const data={
+            admin_id:res[0].admin_id,
+            admin_name:res[0].admin_name,
+            admin_email:res[0].admin_email,
+            admin_password:res[0].admin_password,
+          }
+          return resp.status(200).json(data);
         } else {
           return resp.status(400).json({ status: "password mismatch" });
         }
@@ -286,15 +223,21 @@ app.post("/admin_login", (req, resp) => {
 app.post("/recruiter_login", (req, resp) => {
   const { email, password } = req.body;
   const statement =
-    "SELECT recruiter_password FROM recruiter WHERE recruiter_email=?";
+    "SELECT * FROM recruiter WHERE recruiter_email=?";
   dataBase.query(statement, [email], async (err, res) => {
     try {
       if (err) {
         console.log(err);
-        return resp.status(500).send("Server error");
+        return resp.status(500).json({status:"Server error"});
       } else if (res.length > 0) {
+        const data={
+          recruiter_id:res[0].recruiter_id,
+          recruiter_name:res[0].recruiter_name,
+          recruiter_email:res[0].recruiter_email,
+          recruiter_password:res[0].recruiter_password,
+        }
         if (res[0].recruiter_password === password) {
-          return resp.status(200).json({ status: "recruiter verified" });
+          return resp.status(200).json(data);
         } else {
           return resp.status(400).json({ status: "password mismatch" });
         }
@@ -308,6 +251,7 @@ app.post("/recruiter_login", (req, resp) => {
   });
 });
 
+
 app.post("/std_register", async (req, resp) => {
   const { name, email, password } = req.body;
   const statement = "SELECT * FROM students WHERE student_name=?";
@@ -320,19 +264,25 @@ app.post("/std_register", async (req, resp) => {
         [name, email, password],
         (err, res) => {
           if (err) {
-            console.log(err);
+            console.log(err); 
             return resp.status(501).json(res);
           } else {
-            dataBase.query(
-              "select student_id from students where student_email=?",
-              [email],
-              (err, res) => {
-                const data = { student_id: res[0].student_id };
-                console.log(res);
-                console.log(data);
-                return resp.status(200).json({ data });
+            dataBase.query('select * from students where student_email=?',[email],( err,res)=>{
+              if(err){
+                console.log(err);
+                return resp.status(500).json({status:"Server error"})
               }
-            );
+              const data={
+                student_id:res[0].student_id,
+                student_name:res[0].student_name,
+                student_email:res[0].student_email,
+                student_password:res[0].student_password,
+              }
+              // console.log(res)
+              console.log(data)
+              return resp.status(200).json(data);
+            })
+            
           }
         }
       );
@@ -354,10 +304,24 @@ app.post("/faculty_register", async (req, resp) => {
         [name, email, password],
         (err, res) => {
           if (err) {
-            console.log(err);
+            console.log(err); 
             return resp.status(501).json(res);
           } else {
-            return resp.status(200).json({ status: "user added successfully" });
+            dataBase.query('select * from faculty where faculty_email=?',[email],( err,res)=>{
+              if(err){
+                console.log(err);
+                return resp.status(500).json({"status":"server error"})
+              }
+              const data={
+                faculty_id:res[0].faculty_id,
+                faculty_name:res[0].faculty_name,
+                faculty_email:res[0].faculty_email,
+                faculty_password:res[0].faculty_password,
+              }
+              // console.log(res)
+              console.log(data)
+              return resp.status(200).json(data);
+            })
           }
         }
       );
@@ -366,7 +330,7 @@ app.post("/faculty_register", async (req, resp) => {
     }
   });
 });
-
+ 
 app.post("/admin_register", async (req, resp) => {
   const { name, email, password } = req.body;
   const statement = "SELECT * FROM admin WHERE admin_name=?";
@@ -379,12 +343,24 @@ app.post("/admin_register", async (req, resp) => {
         [name, email, password],
         (err, res) => {
           if (err) {
-            console.log(err);
+            console.log(err); 
             return resp.status(501).json(res);
           } else {
-            return resp
-              .status(200)
-              .json({ status: "admin added successfully" });
+            dataBase.query('select * from admin where admin_email=?',[email],( err,res)=>{
+              if(err){
+                console.log(err);
+                return resp.status(500).json({status:"Server error"})
+              }
+              const data={
+                admin_id:res[0].admin_id,
+                admin_name:res[0].admin_name,
+                admin_email:res[0].admin_email,
+                admin_password:res[0].admin_password,
+              }
+              // console.log(res)
+              console.log(data)
+              return resp.status(200).json(data);
+            })
           }
         }
       );
@@ -406,12 +382,24 @@ app.post("/recruiter_register", async (req, resp) => {
         [name, email, password],
         (err, res) => {
           if (err) {
-            console.log(err);
+            console.log(err); 
             return resp.status(501).json(res);
           } else {
-            return resp
-              .status(200)
-              .json({ status: "recruiter added successfully" });
+            dataBase.query('select * from recruiter where recruiter_email=?',[email],( err,res)=>{
+              if(err){
+                console.log(err);
+                return resp.status(500).json({status:"Server error"})
+              }
+              const data={
+                recruiter_id:res[0].recruiter_id,
+                recruiter_name:res[0].recruiter_name,
+                recruiter_email:res[0].recruiter_email,
+                recruiter_password:res[0].recruiter_password,
+              }
+              // console.log(res)
+              console.log(data)
+              return resp.status(200).json(data);
+            })
           }
         }
       );
@@ -421,26 +409,27 @@ app.post("/recruiter_register", async (req, resp) => {
   });
 });
 
-app.get("/internship", (req, resp) => {
-  const statement = "select * from internship";
-  dataBase.query(statement, (err, res) => {
-    if (err) {
-      return resp.status(500).send("Server error");
-    } else {
-      return resp.status(200).json(res);
+
+app.get("/internship",(req,resp)=>{
+  const statement="select * from internship"
+  dataBase.query(statement,(err,res)=>{
+    if(err){
+      return resp.status(500).json({status:"Server error"})
+    }else{
+      return resp.status(200).json(res)
     }
-  });
-});
-app.get("/notice", (req, resp) => {
-  const statement = "select * from notice";
-  dataBase.query(statement, (err, res) => {
-    if (err) {
-      return resp.status(500).send("Server error");
-    } else {
-      return resp.status(200).json(res);
+  })
+})
+app.get("/notice",(req,resp)=>{
+  const statement="select * from notice"
+  dataBase.query(statement,(err,res)=>{
+    if(err){
+      return resp.status(500).json({status:"Server error"})
+    }else{
+      return resp.status(200).json(res)
     }
-  });
-});
+  })
+})
 
 // app.post("/std_register", async (req, resp) => {
 //   const { student_name, student_email, student_password } = req.body;
@@ -456,7 +445,7 @@ app.get("/notice", (req, resp) => {
 //         [student_name, student_email, hashedPass],
 //         (err, res) => {
 //           if (err) {
-//             console.log(err);
+//             console.log(err); 
 //             return resp.status(501).json(res);
 //           } else {
 //             return resp.status(200).json({ status: "user added successfully" });
@@ -468,7 +457,7 @@ app.get("/notice", (req, resp) => {
 //     }
 //   });
 // });
-
+ 
 // app.post("/std_login", (req, resp) => {
 //   const { student_email, student_password } = req.body;
 //   console.log(req.body);
@@ -494,7 +483,7 @@ app.get("/notice", (req, resp) => {
 //       } else if (res.length <= 0) {
 //         console.log(res);
 //         return resp.status(404).json({ status: "invalid user" });
-//       }
+//       } 
 //     } catch (error) {
 //       console.log(error);
 //     }
