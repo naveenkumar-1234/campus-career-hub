@@ -1,22 +1,27 @@
-import { View, Text,SafeAreaView,ScrollView,Image,TouchableOpacity,ActivityIndicator, } from 'react-native'
-import React from 'react'
-import MenuBar from "../../assets/MenuBar.png"
-import { useState,useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
+import { View, Text, SafeAreaView, ScrollView, Image, ActivityIndicator } from 'react-native';
+import MenuBar from "../../assets/MenuBar.png";
 import ipaddress from '../../ipadd';
+
 export default function StudentScore() {
   const [isLoading, setLoading] = useState(false);
   const [students, setStudents] = useState([]);
-  const [score,setScore]=useState()
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
   const fetchData = async () => {
     setLoading(true); 
     try {
-      const response = await fetch(`http://${ipaddress}/students`, {
+      const response = await fetch(`http://${ipaddress}/seescore`, {
         method: "GET",
         headers: { "Content-Type": "application/json" },
       });
       const data = await response.json();
       console.log(data);
-      setStudents(data);
+      const uniqueStudents = removeDuplicates(data, 'std_name');
+      setStudents(uniqueStudents);
     } catch (error) {
       console.error("Error fetching data:", error);
     } finally {
@@ -24,9 +29,13 @@ export default function StudentScore() {
     }
   };
 
-  useEffect(() => {
-    fetchData();
-  }, []);
+  const removeDuplicates = (array, key) => {
+    return array.filter((item, index, self) =>
+      index === self.findIndex((t) => (
+        t[key] === item[key]
+      ))
+    );
+  };
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#FFFFFF" }}>
@@ -37,12 +46,15 @@ export default function StudentScore() {
         {isLoading ? (
           <ActivityIndicator size="large" color="#0000ff" />
         ) : (
-          students.map((item) => (
-            <View style={{flexDirection:"row",justifyContent:"space-between",marginVertical:10,borderWidth:2,padding:10,flex:1,marginHorizontal:20,borderRadius:10}} key={item.student_id}>
-              <Text>{item.student_name}</Text>
-              <Text>
-                Score :5
-              </Text>
+          students.map((student, index) => (
+            <View key={index} style={{ flexDirection: "row", justifyContent: "space-between", marginVertical: 10, borderWidth: 2, padding: 10, flex: 1, marginHorizontal: 20, borderRadius: 10 }}>
+              <Text>{student.std_name}</Text>
+              <View>
+                <Text>Arithmetic: {student.scores.arithmetic}</Text>
+                <Text>Verbal: {student.scores.verbal}</Text>
+                <Text>Logical: {student.scores.logical}</Text>
+                <Text>Interpretation: {student.scores.interpretation}</Text>
+              </View>
             </View>
           ))
         )}

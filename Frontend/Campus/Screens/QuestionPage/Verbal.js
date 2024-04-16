@@ -5,21 +5,36 @@ import QuestionComponent from './QuesComponent';
 import MenuBar from '../../assets/MenuBar.png';
 import data2 from './data2';
 import { useNavigation,useRoute } from '@react-navigation/native';
-
+import ipaddress from '../../ipadd';
 export default function Verbal() {
   const [score, setScore] = useState(0);
   const navigater=useNavigation()
   const router=useRoute()
   
-  const handleSubmit = () => {
-    const user_id=router.params?.id
-    console.log(user_id)
+  const handleSubmit = async() => {
+    const user_id = router.params?.id;
+    console.log("std_id", user_id.data.student_id);
     console.log('Score:', score);
-    Alert.alert("Score",`You got ${score}/5 ⭐`,[
-      {text:'Done',onPress:()=>{navigater.navigate('skill',{id:user_id})}},
-    
-    ])
- 
+    await Alert.alert("Score", `You got ${score}/5 ⭐`, [
+      { text: 'Done', onPress: () => { navigater.navigate('skill', { id: user_id }) } },
+    ]);
+    const std_id=user_id.data.student_id
+    const std_name=user_id.data.student_name
+    console.log(std_id,std_name)
+    const dataToDB={
+        std_id:std_id,
+        std_name:std_name,
+        scoreType:"verbal",
+        scoreValue:score,
+      
+    }
+    const response =await fetch(`http://${ipaddress}/addscore`,{
+      method:"POST",headers:{'Content-Type':'application/json'},
+      body:JSON.stringify(dataToDB)
+    })
+    const data=await response.json()
+    console.log(data);
+
   };
 
   const handleSelectOption = (quesId, option) => {

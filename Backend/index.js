@@ -82,51 +82,90 @@ app.get("/downloadresume/:id", (req, resp) => {
       console.log(filePath);
 
       return resp.sendFile(filePath);
-      return resp.sendFile(filePath, (err) => {
-        console.log("Error in sending file");
-      });
+      // return resp.sendFile(filePath, (err) => {
+      //   console.log("Error in sending file");
+      // });
+    }
+  });
+}); 
+
+app.post("/addscore", (req, resp) => {
+  const { std_id, std_name, scoreType, scoreValue } = req.body;
+  console.log(std_id, std_name, scoreType, scoreValue);
+  const selectStatement = "SELECT * FROM studentscores WHERE std_id=?";
+  dataBase.query(selectStatement, [std_id], (err, res) => {
+    if (err) {
+      console.log(err);
+      return resp.status(500).json({ status: "server error" });
+    } else if (res.length > 0) {
+      console.log(res[0]);
+      const existingScores = res[0];
+      let updateRequired = false;
+      if (scoreType === "arithmetic" && scoreValue > existingScores.arithmetic) {
+        existingScores.arithmetic = scoreValue;
+        updateRequired = true;
+      } else if (scoreType === "verbal" && scoreValue > existingScores.verbal) {
+        existingScores.verbal = scoreValue;
+        updateRequired = true;
+      } else if (scoreType === "logical" && scoreValue > existingScores.logical) {
+        existingScores.logical = scoreValue;
+        updateRequired = true;
+      } else if (scoreType === "interpretation" && scoreValue > existingScores.interpretation) {
+        existingScores.interpretation = scoreValue;
+        updateRequired = true;
+      }
+
+      if (updateRequired) {
+        const updateStatement = `UPDATE studentscores SET ${scoreType}=? WHERE std_id=?`;
+        const updateValues = [scoreValue, std_id];
+        dataBase.query(updateStatement, updateValues, (err, result) => {
+          if (err) {
+            return resp.status(500).json({ status: "server error" });
+          } else {
+            return resp.status(200).json({ status: "success" });
+          }
+        });
+      } else {
+        return resp.status(200).json({ status: "scores not higher, no update needed" });
+      }
+    } else {
+      const insertStatement = "INSERT INTO studentscores (std_id, std_name, ??) VALUES (?, ?, ?)";
+    const insertValues = [scoreType, std_id, std_name, scoreValue];
+    dataBase.query(insertStatement, insertValues, (err, result) => {
+      if (err) {
+        return resp.status(500).json({ status: "server error" });
+      } else {
+        return resp.status(200).json({ status: "success" });
+      }
+    });
+  }
+    
+  });
+});
+
+app.get("/seescore", (req, res) => {
+  const selectStatement = "SELECT std_name, arithmetic, verbal, logical, interpretation FROM studentscores";
+  dataBase.query(selectStatement, (err, rows) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ status: "server error" });
+    } else {
+      const students = rows.map(row => ({
+        std_name: row.std_name,
+        scores: {
+          arithmetic: row.arithmetic,
+          verbal: row.verbal,
+          logical: row.logical,
+          interpretation: row.interpretation
+        }
+      }));
+      return res.status(200).json(students);
     }
   });
 });
 
-// Add score api end point 
-// app.post("/addscore", (req, resp) => {
-//   const { std_id, std_score } = req.body;
-//   const statement = "select * from stdscore where std_id=?;";
-//   dataBase.query(statement, [std_id], (err, res) => {
-//     if (err) return resp.status(500).json({ status: "server error" });
-//     else if (res.length > 0) {
-//       dataBase.query(
-//         "update std_score from stdscore where std_id=?",
-//         [std_id],
-//         (err, res) => {
-//           if (err) return resp.status(500).json({ status: "server error" });
-//           else {
-//             return resp.status(200).json({ status: "success" });
-//           }
-//         }
-//       );
-//     } else if (res.length <= 0) {
-//       dataBase.query(
-//         "insert into stdscore(std_id,std_score) values (?,?)",
-//         [std_id, std_score],
-//         (err, res) => {
-//           if (err) return resp.status(500).json({ status: "server error" });
-//           else {
-//             return resp.status(200).json({ status: "success" });
-//           }
-//         }
-//       );
-//     }
-//   });
-//   const stmt = "insert into stdscore (std_id,std_score) values (?,?);";
-//   dataBase.query(stmt, [std_id, std_score], (err, res) => {
-//     if (err) return resp.status(500).json({ status: "server error" });
-//     else {
-//       resp.status(200).json({ status: "score added" });
-//     }
-//   });
-// });
+
+
 app.post("/addnotice", (req, resp) => {
   const {
     company_name,
