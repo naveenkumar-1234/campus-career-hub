@@ -59,6 +59,7 @@ CREATE TABLE `students` (
   `student_password` varchar(80) NOT NULL,
   PRIMARY KEY (`student_id`)
 )
+<<<<<<< HEAD
 
 
 //Tables
@@ -75,3 +76,14 @@ CREATE TABLE appointees (
   `eventDetails` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
 );
+=======
+CREATE TABLE `studentscores` (
+  `std_id` int NOT NULL,
+  `arithmetic` int DEFAULT NULL,
+  `verbal` int DEFAULT NULL,
+  `logical` int DEFAULT NULL,
+  `interpretation` int DEFAULT NULL,
+  `std_name` varchar(50) DEFAULT NULL,
+  PRIMARY KEY (`std_id`)
+)
+>>>>>>> a5f8cf265c3350b792087d0c772bf4f232f5c5c0
