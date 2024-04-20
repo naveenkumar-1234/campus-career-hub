@@ -54,7 +54,13 @@ export default function HomeScreen(){
 		}
 	}
 	const handleEventPlan=()=>{
-		navigator.navigate('Eventplanner')
+		if(typeOfUser=="student"){
+			navigator.navigate('Eventplanner')
+
+		}else{
+			console.log("add");
+			navigator.navigate('addevent')
+		}
 	}
 	
 	const handleAvatar=()=>{
@@ -77,7 +83,12 @@ export default function HomeScreen(){
 		
 	}
 	const handleAppointees=()=>{
-		navigator.navigate('appointees')
+		if(typeOfUser=="student"){
+			navigator.navigate('appointees')
+
+		}else{
+			navigator.navigate('addappointess')
+		}
 	}
     
     return (

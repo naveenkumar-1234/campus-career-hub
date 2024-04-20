@@ -59,3 +59,19 @@ CREATE TABLE `students` (
   `student_password` varchar(80) NOT NULL,
   PRIMARY KEY (`student_id`)
 )
+
+
+//Tables
+
+CREATE TABLE appointees (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    company_name VARCHAR(255),
+    position VARCHAR(255),
+    title VARCHAR(255),
+    location VARCHAR(255)
+);
+ CREATE TABLE `events` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `eventDetails` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+);

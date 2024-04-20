@@ -68,16 +68,7 @@ export default function SkillAppraisal() {
             marginHorizontal: 15,
           }}
         >
-          <Image
-            source={MenuBar}
-            resizeMode={"stretch"}
-            style={{
-              width: 31,
-              height: 33,
-              marginTop: 5,
-              marginRight: 24,
-            }}
-          />
+         
           <Text
             style={{
               color: "#000000",

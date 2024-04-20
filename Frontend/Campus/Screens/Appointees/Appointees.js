@@ -1,7 +1,25 @@
 import { SafeAreaView, View, ScrollView, Image, Text, } from "react-native";
 import Search from "../../assets/SearchIcon.png";
 import MenuBar from "../../assets/MenuBar.png";
+import { useState,useEffect } from "react";
+import ipaddress from "../../ipadd";
 export default function Appointees() {
+  const [appointData, setAppointData] = useState([]);
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const fetchData = async () => {
+    try {
+      const response = await fetch(`http://${ipaddress}/appointees`, {
+        method: "GET",
+      });
+      const data = await response.json();
+      setAppointData(data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
   return (
     <SafeAreaView
       style={{
@@ -25,16 +43,7 @@ export default function Appointees() {
             marginHorizontal: 15,
           }}
         >
-          <Image
-            source={MenuBar}
-            resizeMode={"stretch"}
-            style={{
-              width: 31,
-              height: 33,
-              marginTop: 5,
-              marginRight: 24,
-            }}
-          />
+        
           <Text
             style={{
               color: "#000000",
@@ -49,14 +58,7 @@ export default function Appointees() {
               flex: 1,
             }}
           ></View>
-          <Image
-            source={Search}
-            resizeMode={"stretch"}
-            style={{
-              width: 32,
-              height: 33,
-            }}
-          />
+         
         </View>
         <View
           style={{
@@ -66,28 +68,28 @@ export default function Appointees() {
             marginBottom: 20,
           }}
         ></View>
-        <View style={{
-              flexDirection: "column",
-              borderWidth: 2,
-              padding: 10,
-              marginHorizontal: 10,
-              marginVertical: 5,
-              borderRadius:20,
-              gap:10,paddingVertical:10,
-              backgroundColor:'#D7D7D7'
-            }}
-            //  key={item.id}
-            
-            >
-              <Text  >Sharafath Zulfiah  [2024]</Text>
-              <Text>Position: Technical Support</Text>
-              <Text>Company name: Zoho Corporation</Text>
-              <Text>Location: Chennai</Text>
-              {/* <Text>CONTACT EMAIL: {item.contact_email}</Text> */}
- 
-            </View>
-          {/* ))} */}
+        {appointData.map((item)=>(
+          <View style={{
+            flexDirection: "column",
+            borderWidth: 2,
+            padding: 10,
+            marginHorizontal: 10,
+            marginVertical: 5,
+            borderRadius:20,
+            gap:10,paddingVertical:10,
+            backgroundColor:'#D7D7D7'
+          }}
+            key={item.id}
+          
+          >
+            <Text  >{item.title}</Text>
+            <Text>{item.position}</Text>
+            <Text>{item.company_name}</Text>
+            <Text>{item.location}</Text>
+
+          </View>
         
+        ))}
         
         
       </ScrollView>

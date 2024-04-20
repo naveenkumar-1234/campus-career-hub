@@ -21,6 +21,8 @@ import Interpretation from './Screens/QuestionPage/Interpretation';
 import Verbal from './Screens/QuestionPage/Verbal';
 import Logical from './Screens/QuestionPage/Logical';
 import StudentScore from './Screens/QuestionPage/StudentScore';
+import AddEvent from './Screens/EventPlanner/AddEvent';
+import AddAppointess from './Screens/Appointees/AddAppointess';
 
 const Stack =createNativeStackNavigator()
 export default function App() {
@@ -45,7 +47,9 @@ export default function App() {
         <Stack.Screen name='verbal' component={Verbal} options={{headerShown:false}} />
         <Stack.Screen name='logical' component={Logical} options={{headerShown:false}} />
         <Stack.Screen name='studentscore' component={StudentScore} options={{headerShown:false}} />
-
+        <Stack.Screen name='addevent' component={AddEvent} options={{headerShown:false}} />
+        <Stack.Screen name='addappointess' component={AddAppointess} options={{headerShown:false}} />
+            
       </Stack.Navigator>
     </NavigationContainer>
   );

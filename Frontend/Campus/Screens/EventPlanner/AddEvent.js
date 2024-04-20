@@ -4,20 +4,16 @@ import Search from '../../assets/SearchIcon.png';
 import MenuBar from '../../assets/MenuBar.png';
 import { useState } from 'react';
 import ipaddress from '../../ipadd';
-export default function AddIntern() {
+export default function AddEvent() {
     const [inputData, setInputData] = useState({
-        company_name: '',
-        open_position: '',
-        enroll_now_link: '',
-        contact_number: '',
-        contact_email:'',
+        eventDetails:""
 
       });
     
       const submitData = async () => {
         try {
             // console.log(inputData);
-          const response = await fetch(`http://${ipaddress}/addintern`, {
+          const response = await fetch(`http://${ipaddress}/addevent`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json'
@@ -35,10 +31,9 @@ export default function AddIntern() {
           Alert.alert('Error', 'Failed to submit data. Please try again later.');
         }
       };
-      const handleInputChange = (key, value) => {
-        setInputData(prevState => ({
-          ...prevState,
-          [key]: value
+      const handleInputChange = (value) => {
+        setInputData(() => ({
+          eventDetails: value
         }));
       };
 //   const fetchData = async () => {
@@ -69,32 +64,19 @@ export default function AddIntern() {
           paddingBottom: 274,
         }}
       >
-        <View
-          style={{
-            flexDirection: "row",
-            marginBottom: 4,
-            justifyContent:'center',
-          
-            marginHorizontal: 15,
-          }}
-        >
-          
+        
+        
           <Text
             style={{
               color: "#000000",
               fontSize: 16,
               marginTop: 17,
+              justifyContent:"center"
             }}
           >
-            {"Add Internship"}
+            {"Add Event"}
           </Text>
-          <View
-            style={{
-              flex: 1,
-            }}
-          ></View>
           
-        </View>
         <View
           style={{
             width: 374,
@@ -115,46 +97,12 @@ export default function AddIntern() {
         >
            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center',gap:30 }}>
       <TextInput
-        placeholder="Company Name"
+        placeholder="Details of Event"
         value={inputData.company_name}
-        onChangeText={text => handleInputChange('company_name', text)}
+        onChangeText={text => handleInputChange(text)}
         style={{ marginBottom: 10, borderWidth: 1, borderColor: 'black',  width: '80%',paddingVertical:15,paddingHorizontal:10 }}
       />
-      <TextInput
-        placeholder="Position"
-        value={inputData.open_position}
-        onChangeText={text => handleInputChange('open_position', text)}
-        style={{ marginBottom: 10, borderWidth: 1, borderColor: 'black', width: '80%',paddingVertical:15,paddingHorizontal:10}}
-      />
-      <TextInput
-        placeholder="Link for Enroll"
-        value={inputData.enroll_now_link}
-        onChangeText={text => handleInputChange('enroll_now_link', text)}
-        style={{ marginBottom: 10, borderWidth: 1, borderColor: 'black', width: '80%',paddingVertical:15,paddingHorizontal:10 }}
-      />
-      <TextInput
-        placeholder="Vacancies"
-        value={inputData.vacancies}
-        onChangeText={text => handleInputChange('vacancies', text)}
-        style={{ marginBottom: 10, borderWidth: 1, borderColor: 'black',  width: '80%',paddingVertical:15,paddingHorizontal:10}}
-      />
-      <TextInput
-        placeholder="Contact Number"
-        value={inputData.contact_number}
-        onChangeText={text => handleInputChange('contact_number', text)}
-        style={{ marginBottom: 10, borderWidth: 1, borderColor: 'black',  width: '80%',paddingVertical:15,paddingHorizontal:10 }}
-      />
-      <TextInput
-        placeholder="Location"
-        value={inputData.job_location}
-        onChangeText={text => handleInputChange('job_location', text)}
-        style={{ marginBottom: 10, borderWidth: 1, borderColor: 'black',  width: '80%',paddingVertical:15,paddingHorizontal:10 }}
-      /><TextInput
-      placeholder="Contact E-Mail"
-      value={inputData.contact_email}
-      onChangeText={text => handleInputChange('contact_email', text)}
-      style={{ marginBottom: 10, borderWidth: 1, borderColor: 'black',  width: '80%',paddingVertical:15,paddingHorizontal:10 }}
-    />
+     
       <Button title="ADD DATA" onPress={submitData} />
     </View>
         </View>

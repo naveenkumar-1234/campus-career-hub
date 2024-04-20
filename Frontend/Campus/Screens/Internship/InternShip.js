@@ -51,16 +51,7 @@ export default function InternShip() {
             marginHorizontal: 15,
           }}
         >
-          <Image
-            source={MenuBar}
-            resizeMode={"stretch"}
-            style={{
-              width: 31,
-              height: 33,
-              marginTop: 5,
-              marginRight: 24,
-            }}
-          />
+         
           <Text
             style={{
               color: "#000000",
@@ -75,14 +66,6 @@ export default function InternShip() {
               flex: 1,
             }}
           ></View>
-          <Image
-            source={Search}
-            resizeMode={"stretch"}
-            style={{
-              width: 32,
-              height: 33,
-            }}
-          />
         </View>
         <View
           style={{

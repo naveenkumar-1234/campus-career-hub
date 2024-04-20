@@ -88,8 +88,7 @@ useEffect(()=>{
     <SafeAreaView style={{ flex: 1, backgroundColor: "#FFFFFF" }}>
       <ScrollView style={{ flex: 1, backgroundColor: "#6287A1D9", borderRadius: 25, paddingTop: 26, paddingBottom: 274 }}>
         <View style={{ flexDirection: "row", marginBottom: 4, marginHorizontal: 15 }}>
-          <Image source={MenuBar} resizeMode={"stretch"} style={{ width: 31, height: 33, marginTop: 5, marginRight: 24 }} />
-        </View>
+                 </View>
         {isLoading?(<View style={{height:'100%',flex:1,justifyContent:'center',alignItems:'center'}}>
           <ActivityIndicator color="#000000" size={65} style={{justifyContent:'center',alignItems:'ce'}} />
         </View>):(<View>

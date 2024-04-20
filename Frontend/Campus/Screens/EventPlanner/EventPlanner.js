@@ -11,7 +11,24 @@ import {
   import React, { useEffect, useState } from "react";
   import Search from "../../assets/SearchIcon.png";
   import MenuBar from "../../assets/MenuBar.png";
+  import ipaddress from "../../ipadd";
 export default function EventPlanner() {
+  const [eventData, setEventData] = useState([]);
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const fetchData = async () => {
+    try {
+      const response = await fetch(`http://${ipaddress}/events`, {
+        method: "GET",
+      });
+      const data = await response.json();
+      setEventData(data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
   return (
     <SafeAreaView
       style={{
@@ -35,16 +52,7 @@ export default function EventPlanner() {
             marginHorizontal: 15,
           }}
         >
-          <Image
-            source={MenuBar}
-            resizeMode={"stretch"}
-            style={{
-              width: 31,
-              height: 33,
-              marginTop: 5,
-              marginRight: 24,
-            }}
-          />
+         
           <Text
             style={{
               color: "#000000",
@@ -59,14 +67,7 @@ export default function EventPlanner() {
               flex: 1,
             }}
           ></View>
-          <Image
-            source={Search}
-            resizeMode={"stretch"}
-            style={{
-              width: 32,
-              height: 33,
-            }}
-          />
+          
         </View>
         <View
           style={{
@@ -85,7 +86,7 @@ export default function EventPlanner() {
             marginVertical: 5,
           }}
         >
-          {/* {internData.map((item) => ( */}
+         {eventData.map((item) => (
             <View style={{
               flexDirection: "column",
               borderWidth: 2,
@@ -96,18 +97,18 @@ export default function EventPlanner() {
               gap:10,paddingVertical:10,
               backgroundColor:'#D7D7D7'
             }}
-            //  key={item.id}
+            key={item.id}
             
             >
-              <Text  >Round 2 of CEI priv.lim on 06/03/2024</Text>
+              {/* <Text  >Round 2 of CEI priv.lim on 06/03/2024</Text>
               <Text>Revised Schedule for soft  skill training 
-on 05/03/2024 </Text>
-              {/* <Text>ENROLL: {item.enroll_now_link}</Text>
-              <Text>CONTACT:{item.contact_number}</Text>
-              <Text>CONTACT EMAIL: {item.contact_email}</Text> */}
+on 05/03/2024 </Text> */}
+              <Text>{item.eventDetails}</Text>
+              {/* <Text>CONTACT:{item.contact_number}</Text> */}
+              {/* <Text>CONTACT EMAIL: {item.contact_email}</Text> */} 
 
             </View>
-          {/* ))} */}
+           ))} 
         </View>
       </ScrollView>
     </SafeAreaView>

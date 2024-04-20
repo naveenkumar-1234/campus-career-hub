@@ -199,7 +199,7 @@ app.post("/addnotice", (req, resp) => {
         resp.status(200).json({ message: "Notice added successfully" });
       }
     }
-  );
+  ); 
 });
 app.post("/addintern", (req, resp) => {
   const {
@@ -224,9 +224,79 @@ app.post("/addintern", (req, resp) => {
     (err, res) => {
       if (err) {
         console.log(err);
-        resp.status(500).json({ error: "Failed to add notice" });
+        resp.status(500).json({ error: "Failed to add intern" });
       } else {
-        resp.status(200).json({ message: "Notice added successfully" });
+        resp.status(200).json({ message: "Intern added successfully" });
+      }
+    }
+  );
+});
+app.post("/addappoint", (req, resp) => {
+  const {
+    company_name,
+    position,
+    title,
+    location
+  } = req.body;
+  console.log(company_name);
+  const statement =
+    "INSERT INTO appointees(company_name,position,title,location) VALUES(?, ?, ?,?)";
+  dataBase.query(
+    statement,
+    [
+      company_name,
+      position,
+      title,
+      location
+    ],
+    (err, res) => {
+      if (err) {
+        console.log(err);
+        resp.status(500).json({ error: "Failed to Add" });
+      } else {
+        resp.status(200).json({ message: "Added successfully" });
+      }
+    }
+  );
+});
+app.get("/appointees", (req, resp) => {
+  const statement = "select * from appointees";
+  dataBase.query(statement, (err, res) => {
+    if (err) {
+      return resp.status(500).send("Server error");
+    } else {
+      return resp.status(200).json(res);
+    }
+  });
+});
+app.get("/events", (req, resp) => {
+  const statement = "select * from events";
+  dataBase.query(statement, (err, res) => {
+    if (err) {
+      return resp.status(500).send("Server error");
+    } else {
+      return resp.status(200).json(res);
+    }
+  });
+});
+
+app.post("/addevent", (req, resp) => {
+  const {
+    eventDetails
+  } = req.body;
+  const statement =
+    "INSERT INTO events(eventDetails) VALUES(?)";
+  dataBase.query(
+    statement,
+    [
+      eventDetails
+    ],
+    (err, res) => {
+      if (err) {
+        console.log(err);
+        resp.status(500).json({ error: "Failed to add event" });
+      } else {
+        resp.status(200).json({ message: "Event added successfully" });
       }
     }
   );
